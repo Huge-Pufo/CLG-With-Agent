@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "gameData.h"
 
 int main() {
@@ -13,8 +14,12 @@ int main() {
     while (gameRunning) {
         if (player1Turn) {
             int position;
+            std::string input;
             std::cout << "Player 1, enter your position (1-9): ";
-            std::cin >> position;
+            std::getline(std::cin, input);
+            if (!table.validateInput(input, position)) {
+                continue;
+            }
             if (table.setPositionTo('X', position)) {
                 player1Turn = false;
                 player2Turn = true;
@@ -22,8 +27,12 @@ int main() {
 
         } else if (player2Turn) {
             int position;
+            std::string input;
             std::cout << "Player 2, enter your position (1-9): ";
-            std::cin >> position;
+            std::getline(std::cin, input);
+            if (!table.validateInput(input, position)) {
+                continue;
+            }
             if (table.setPositionTo('O', position)) {
                 player2Turn = false;
                 player1Turn = true;
@@ -34,9 +43,13 @@ int main() {
         Table t;
         t.drawTable(table);
 
-        // Check for win condition or draw here (not implemented)
+        // Check for win condition
         if (t.checkWinCondition(table)) {
-            std::cout << "Player " << (player1Turn ? "1" : "2") << " wins!" << std::endl;
+            if (player1Turn) {
+                std::cout << "Player 2 wins!" << std::endl;
+            } else {
+                std::cout << "Player 1 wins!" << std::endl;
+            }
             gameRunning = false;
         }
     }

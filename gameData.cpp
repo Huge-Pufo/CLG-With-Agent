@@ -1,5 +1,6 @@
 #include "gameData.h"
 #include <iostream>
+#include <sstream>
 
 TableData::TableData() {
     for (int i = 0; i < 9; i++) {
@@ -8,8 +9,19 @@ TableData::TableData() {
     }
 }
 
+// Checks whether the input is an integer between 1 and 9.
+bool TableData::validateInput(const std::string& input, int& position) {
+    std::istringstream parser(input);
+    char extra;
+    if (!(parser >> position) || (parser >> extra) || position < 1 || position > 9) {
+        std::cout << "Invalid input. Please choose an integer from 1 to 9." << std::endl;
+        return false;
+    }
+    return true;
+}
+
 //Changes 'positions' array to have the character 'X' or 'O' in the specified position. From 1-9. 
-// Once every time user input is received, this function will be called to change the 'positions' array in the TableData object.
+// every time user input is received, this function is called to change the 'positions' array in the TableData object.
 bool TableData::setPositionTo(char character, int position) {
     if (position < 1 || position > 9) {
         std::cout << "Invalid position. Please choose a position from 1 to 9." << std::endl;
@@ -30,6 +42,17 @@ bool TableData::setPositionTo(char character, int position) {
     positions[position - 1].position = position;
 
     return true;
+}
+
+//Redraws the Tictactoe table with 'X' and 'O" in whatever position the player chose (1-9).
+void Table::drawTable(TableData table) {
+    std::cout << "Current Tic Tac Toe Board:" << std::endl;
+    for (int i = 0; i < 9; i++) {
+        std::cout << "[" << table.getPosition(i + 1).character << "]";
+        if ((i + 1) % 3 == 0) {
+            std::cout << std::endl;
+        }
+    }
 }
 
 //Returns the CharData struct at the specified position. From 1-9.
